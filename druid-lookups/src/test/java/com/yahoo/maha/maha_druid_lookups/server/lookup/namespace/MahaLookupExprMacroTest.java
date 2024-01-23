@@ -29,6 +29,7 @@ import com.yahoo.maha.maha_druid_lookups.query.lookup.namespace.JDBCExtractionNa
 import org.apache.druid.common.config.NullHandling;
 import org.apache.druid.math.expr.Expr;
 import org.apache.druid.math.expr.ExprMacroTable;
+import org.apache.druid.math.expr.InputBindings;
 import org.apache.druid.math.expr.Parser;
 import org.apache.druid.metadata.MetadataStorageConnectorConfig;
 import org.apache.druid.query.lookup.*;
@@ -46,11 +47,7 @@ import java.util.*;
 public class MahaLookupExprMacroTest {
 
 
-    private static final Expr.ObjectBinding BINDINGS = Parser.withMap(
-            ImmutableMap.<String, Object>builder()
-                    .put("id1", "dim_key1")
-                    .build()
-    );
+    private static final Expr.ObjectBinding BINDINGS = createBindings();
 
     private static Map<String, List> lookupCache = ImmutableMap.of(
             "dim_key1", Arrays.asList("dim_key1", "dim_val1")
@@ -152,4 +149,11 @@ public class MahaLookupExprMacroTest {
         final Expr roundTrip = Parser.parse(expr.stringify(), macroTable);
         Assert.assertEquals(exprNotFlattened.stringify(), expectedResult, roundTrip.eval(BINDINGS).value());
     }
+
+    private static Expr.ObjectBinding createBindings()
+    {
+        ImmutableMap.Builder<String, Object> builder = ImmutableMap.of("id1", "dim_key1").builder();
+        return InputBindings.forMap(builder.build());
+    }
+
 }
