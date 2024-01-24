@@ -29,6 +29,7 @@ import org.apache.calcite.rex.RexNode;
 import org.apache.calcite.sql.type.SqlTypeName;
 import org.apache.druid.common.config.NullHandling;
 import org.apache.druid.math.expr.ExprMacroTable;
+import org.apache.druid.math.expr.ExpressionProcessing;
 import org.apache.druid.query.lookup.*;
 import org.apache.druid.segment.column.ColumnType;
 import org.apache.druid.segment.column.RowSignature;
@@ -44,6 +45,7 @@ public class MahaLookupOperatorConversionTest {
 
     @BeforeTest
     public void setUp(){
+        ExpressionProcessing.initializeForTests();
         NullHandling.initializeForTests();
     }
 

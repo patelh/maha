@@ -252,7 +252,7 @@ public abstract class MahaNamespaceExtractionCacheManager<U> {
                         }
                     }
                 }
-        );
+        , listeningScheduledExecutorService);
         future.cancel(true);
         try {
             latch.await();
