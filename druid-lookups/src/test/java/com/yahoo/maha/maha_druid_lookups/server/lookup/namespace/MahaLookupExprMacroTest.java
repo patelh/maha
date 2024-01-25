@@ -29,6 +29,9 @@ import com.yahoo.maha.maha_druid_lookups.query.lookup.namespace.JDBCExtractionNa
 import org.apache.druid.common.config.NullHandling;
 import org.apache.druid.math.expr.Expr;
 import org.apache.druid.math.expr.ExprMacroTable;
+import org.apache.druid.math.expr.ExpressionProcessing;
+import org.apache.druid.math.expr.ExpressionType;
+import org.apache.druid.math.expr.InputBindings;
 import org.apache.druid.math.expr.Parser;
 import org.apache.druid.metadata.MetadataStorageConnectorConfig;
 import org.apache.druid.query.lookup.*;
@@ -46,9 +49,9 @@ import java.util.*;
 public class MahaLookupExprMacroTest {
 
 
-    private static final Expr.ObjectBinding BINDINGS = Parser.withMap(
-            ImmutableMap.<String, Object>builder()
-                    .put("id1", "dim_key1")
+    private static final Expr.ObjectBinding BINDINGS = InputBindings.forInputSuppliers(
+        ImmutableMap.<String, InputBindings.InputSupplier<?>>builder()
+                    .put("id1", InputBindings.inputSupplier(ExpressionType.STRING, () -> "dim_key1"))
                     .build()
     );
 
@@ -65,6 +68,7 @@ public class MahaLookupExprMacroTest {
     public static void setUpClass()
     {
         NullHandling.initializeForTests();
+        ExpressionProcessing.initializeForTests();
 
         //Construct LookupExtractor
         MetadataStorageConnectorConfig metadataStorageConnectorConfig = new MetadataStorageConnectorConfig();
@@ -123,6 +127,13 @@ public class MahaLookupExprMacroTest {
                         )
                 )
         );
+    }
+    private static Expr.ObjectBinding createBindings()
+    {
+        ImmutableMap.Builder<String, Object> builder = ImmutableMap.of("id1", "dim_key1").builder();
+        ImmutableMap.Builder<String, ExpressionType> inputTypesBuilder = ImmutableMap.builder();
+        inputTypesBuilder.put("id1", ExpressionType.STRING);
+        return InputBindings.forMap(builder.build(), InputBindings.inspectorFromTypeMap(inputTypesBuilder.build()));
     }
 
     @Rule
