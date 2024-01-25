@@ -128,13 +128,6 @@ public class MahaLookupExprMacroTest {
                 )
         );
     }
-    private static Expr.ObjectBinding createBindings()
-    {
-        ImmutableMap.Builder<String, Object> builder = ImmutableMap.of("id1", "dim_key1").builder();
-        ImmutableMap.Builder<String, ExpressionType> inputTypesBuilder = ImmutableMap.builder();
-        inputTypesBuilder.put("id1", ExpressionType.STRING);
-        return InputBindings.forMap(builder.build(), InputBindings.inspectorFromTypeMap(inputTypesBuilder.build()));
-    }
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
